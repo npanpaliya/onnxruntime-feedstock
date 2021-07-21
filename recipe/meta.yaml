@@ -1,5 +1,5 @@
 {% set name = "onnxruntime" %}
-{% set cuda_enabled = cuda_compiler_version != "None" %}
+{% set cuda_enabled = cudatoolkit == "None" %}
 {% set build_ext = "cuda" if cuda_enabled else "cpu" %}
 {% set version = "1.7.2" %}
 
@@ -22,8 +22,10 @@ source:
 
 build:
   number: 2
-  skip: true  # [win or (cuda_compiler_version == "10.2")]
+  skip: true  # [win or (cudatoolkit == "10.2")]
   string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}_{{ build_ext }}
+  script_env:
+    - CUDA_HOME
   track_features:
     {{ "- onnxruntime-cuda" if cuda_enabled else "" }}
 
@@ -35,7 +37,7 @@ requirements:
     - pybind11                               # [build_platform != target_platform]
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - {{ compiler("cuda") }}  # [cuda_compiler_version != "None"]
+      #- {{ compiler("cuda") }}  # [cudatoolkit != "None"]
     - cmake
     - ninja
     - libprotobuf
@@ -43,8 +45,8 @@ requirements:
     - python
     - pip
     - wheel
-    - cub    # [cuda_compiler_version != "None"]
-    - cudnn  # [cuda_compiler_version != "None"]
+      #- cub    # [build_type == "cuda"]
+    - cudnn  # [build_type == "cuda"]
     - boost_mp11
     - flake8
     - flatbuffers
@@ -63,10 +65,12 @@ requirements:
     - numpy
     - pybind11
     - safeint
+    - cudatoolkit
   run:
     - python
     - {{ pin_compatible('numpy') }}
     - protobuf
+    - cudatoolkit
 
 test:
   imports:

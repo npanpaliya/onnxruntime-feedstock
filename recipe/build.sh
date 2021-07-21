@@ -19,6 +19,17 @@ popd
 # ln -s $PREFIX/include/eigen3 eigen
 # popd
 
+CUDA_ARGS=""
+CMAKE_CUDA_EXTRA_DEFINES=""
+if [[ $build_type == "cuda" ]]
+then
+  export CUDNN_HOME=$PREFIX
+  CUDA_ARGS=" --use_cuda "
+  CMAKE_CUDA_EXTRA_DEFINES="CMAKE_CUDA_COMPILER=${CUDA_HOME}/bin/nvcc CMAKE_CUDA_HOST_COMPILER=${CXX}"
+fi
+
+export CUDACXX=$CUDA_HOME/bin/nvcc
+
 if [[ ! -z "${cuda_compiler_version+x}" && "${cuda_compiler_version}" != "None" ]]; then
   BUILD_ARGS="--use_cuda --cuda_home ${CUDA_HOME} --cudnn_home ${PREFIX}"
 else
@@ -30,7 +41,8 @@ python tools/ci_build/build.py \
     --enable_lto \
     --build_dir build-ci \
     --use_full_protobuf \
-    --cmake_extra_defines Protobuf_PROTOC_EXECUTABLE=$BUILD_PREFIX/bin/protoc Protobuf_INCLUDE_DIR=$PREFIX/include "onnxruntime_PREFER_SYSTEM_LIB=ON" onnxruntime_USE_COREML=OFF CMAKE_PREFIX_PATH=$PREFIX CMAKE_INSTALL_PREFIX=$PREFIX \
+    ${CUDA_ARGS} \
+    --cmake_extra_defines ${CMAKE_CUDA_EXTRA_DEFINES} Protobuf_PROTOC_EXECUTABLE=$BUILD_PREFIX/bin/protoc Protobuf_INCLUDE_DIR=$PREFIX/include "onnxruntime_PREFER_SYSTEM_LIB=ON" onnxruntime_USE_COREML=OFF CMAKE_PREFIX_PATH=$PREFIX CMAKE_INSTALL_PREFIX=$PREFIX \
     --cmake_generator Ninja \
     --build_wheel \
     --config Release \
