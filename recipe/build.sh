@@ -36,7 +36,7 @@ else
   BUILD_ARGS=""
 fi
 
-
+export LDFLAGS="${LDFLAGS} -L${PREFIX}/lib"
 python tools/ci_build/build.py \
     --enable_lto \
     --build_dir build-ci \

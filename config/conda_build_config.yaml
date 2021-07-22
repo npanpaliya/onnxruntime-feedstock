@@ -1,2 +1,10 @@
 cmake:
   - 3.19.*
+c_compiler_version:
+  - 7.2.*                      # [x86_64]
+  - 8.2.*                      # [ppc64le]
+  - 7.5.*                      # [s390x]
+cxx_compiler_version:
+  - 7.2.*                      # [x86_64]
+  - 8.2.*                      # [ppc64le]
+

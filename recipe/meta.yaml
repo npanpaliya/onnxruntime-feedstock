@@ -13,6 +13,7 @@ source:
     sha256: ef0135c49922d854b2d1ccac3759d7baf895df537c5f15386ce49fe2430ac688
     patches:
       - 0001-Use-more-system-libraries.patch
+      - 0001-Fixed-build.patch
   - url: https://github.com/onnx/onnx/archive/971632833036c576cf95499291f689f8bb3519e1.zip
     sha256: 340999131688d6ab7a7939df587057cc9e49d326fc112ff65b58e121a0afad92
     folder: onnx
